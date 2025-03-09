@@ -28,7 +28,7 @@ namespace Compnay.BLL.Repositories
 
         public Department? Get(int id)
         {
-            return _context.Departments.Find(id);
+            return _context.Departments.FirstOrDefault(x => x.Id == id);
         }
 
         public int Add(Department model)
