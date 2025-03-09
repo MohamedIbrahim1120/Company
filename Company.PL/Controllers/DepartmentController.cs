@@ -1,4 +1,6 @@
-﻿using Compnay.BLL.Interfaces;
+﻿using Company.DAL.Models;
+using Company.PL.Dtos;
+using Compnay.BLL.Interfaces;
 using Compnay.BLL.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +25,34 @@ namespace Company.PL.Controllers
             var deaprment = _departmentReopsitory.GetAll();
 
             return View(deaprment);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(CreateDtoDepartment model)
+        {
+            if (ModelState.IsValid) // Server Side Validation
+            {
+                var department = new Department()
+                {
+                    Code = model.Code,
+                    Name = model.Name,
+                    CreateAt = model.CreateAt,
+                };
+              var count =  _departmentReopsitory.Add(department);
+                if (count > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            return View(model);
         }
     }
 }
