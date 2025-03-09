@@ -54,5 +54,18 @@ namespace Company.PL.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            if(id is null) return NotFound();
+
+            var dept = _departmentReopsitory.Get(id.Value);
+
+            if (dept is null) return NotFound();
+
+            return View(dept);
+        }
+
     }
 }

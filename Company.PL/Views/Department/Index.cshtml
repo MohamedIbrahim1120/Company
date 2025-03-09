@@ -35,7 +35,7 @@
                     <td>@item.Name</td>
                     <td>@item.CreateAt</td>
                     <td>
-                        <a asp-action="Details" class="btn" style="background-color: #17a2b8; color: white;">Details</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn" style="background-color: #17a2b8; color: white;">Details</a>
                     </td>
                     <td>
                         <a asp-action="Edit" class="btn" style="background-color: #007bff; color: white;">Update</a>
