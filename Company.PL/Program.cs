@@ -1,3 +1,8 @@
+using Company.DAL.Data.Contexts;
+using Compnay.BLL.Interfaces;
+using Compnay.BLL.Repositories;
+using Microsoft.EntityFrameworkCore;
+
 namespace Company.PL
 {
     public class Program
@@ -8,6 +13,13 @@ namespace Company.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(); // Register Bulit-in MVC Services
+
+            builder.Services.AddScoped<IDepartmentReopsitory,DepartmentReopsitory>(); // Allow DI For DepartmentReopsitory
+
+            builder.Services.AddDbContext<CompanyDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            } );  // Allow DI For CompanyDbContext
 
             var app = builder.Build();
 
@@ -34,3 +46,4 @@ namespace Company.PL
         }
     }
 }
+
