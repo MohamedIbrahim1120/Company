@@ -3,6 +3,8 @@ using Company.PL.Dtos;
 using Compnay.BLL.Interfaces;
 using Compnay.BLL.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using NuGet.Protocol.Plugins;
 
 namespace Company.PL.Controllers
 {
@@ -66,6 +68,71 @@ namespace Company.PL.Controllers
 
             return View(dept);
         }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id is null) return BadRequest("Invaild Id");
+
+            var dept = _departmentReopsitory.Get(id.Value);
+
+            if (dept is null) return NotFound(new {StatusCode = 404, message = $"Deparment With id  :{id} is not Found"});
+
+
+            return View(dept);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([FromRoute] int id, Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                if (id == department.Id)
+                {
+                    var dept = _departmentReopsitory.Update(department);
+                    if (dept > 0)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+            return View(department);
+        }
+
+
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id is null) return BadRequest("Invaild Id");
+
+            var dept = _departmentReopsitory.Get(id.Value);
+
+            if (dept is null) return NotFound(new { StatusCode = 404, message = $"Deparment With id  :{id} is not Found" });
+
+
+            return View(dept);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete([FromRoute] int id, Department department)
+        {
+            if (ModelState.IsValid)
+            {
+                if (id == department.Id)
+                {
+                    var dept = _departmentReopsitory.Delete(department);
+                    if (dept > 0)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+            return View(department);
+        }
+
 
     }
 }
