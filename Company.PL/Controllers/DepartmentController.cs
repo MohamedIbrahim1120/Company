@@ -58,7 +58,7 @@ namespace Company.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id)
+        public IActionResult Details(int? id,string viewName = "Details")
         {
             if(id is null) return NotFound();
 
@@ -66,20 +66,19 @@ namespace Company.PL.Controllers
 
             if (dept is null) return NotFound();
 
-            return View(dept);
+            return View(viewName,dept);
         }
 
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            if (id is null) return BadRequest("Invaild Id");
+            //if (id is null) return BadRequest("Invaild Id");
 
-            var dept = _departmentReopsitory.Get(id.Value);
+            //var dept = _departmentReopsitory.Get(id.Value);
 
-            if (dept is null) return NotFound(new {StatusCode = 404, message = $"Deparment With id  :{id} is not Found"});
+            //if (dept is null) return NotFound(new {StatusCode = 404, message = $"Deparment With id  :{id} is not Found"});
 
-
-            return View(dept);
+            return Details(id,"Edit");
         }
 
 
@@ -105,14 +104,14 @@ namespace Company.PL.Controllers
         [HttpGet]
         public IActionResult Delete(int? id)
         {
-            if (id is null) return BadRequest("Invaild Id");
+            //if (id is null) return BadRequest("Invaild Id");
 
-            var dept = _departmentReopsitory.Get(id.Value);
+            //var dept = _departmentReopsitory.Get(id.Value);
 
-            if (dept is null) return NotFound(new { StatusCode = 404, message = $"Deparment With id  :{id} is not Found" });
+            //if (dept is null) return NotFound(new { StatusCode = 404, message = $"Deparment With id  :{id} is not Found" });
 
 
-            return View(dept);
+            return Details(id,nameof(Delete));
         }
 
         [HttpPost]
@@ -137,4 +136,3 @@ namespace Company.PL.Controllers
     }
 }
 
-// 59-35
