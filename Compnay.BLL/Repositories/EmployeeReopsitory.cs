@@ -1,5 +1,7 @@
-﻿using Company.DAL.Models;
+﻿using Company.DAL.Data.Contexts;
+using Company.DAL.Models;
 using Compnay.BLL.Interfaces;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,30 +12,42 @@ namespace Compnay.BLL.Repositories
 {
     public class EmployeeReopsitory : IEmployeeReopsitory
     {
+        private readonly CompanyDbContext _context;
 
-        public int Add(Employee model)
+        public EmployeeReopsitory(CompanyDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public int Delete(Employee model)
+
+        public IEnumerable<Employee> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Employees.ToList();
         }
 
         public Employee? Get(int id)
         {
-            throw new NotImplementedException();
+            return _context.Employees.Find(id);
         }
 
-        public IEnumerable<Employee> GetAll()
+        public int Add(Employee model)
         {
-            throw new NotImplementedException();
+            _context.Employees.Add(model);
+            return _context.SaveChanges();
         }
 
         public int Update(Employee model)
         {
-            throw new NotImplementedException();
+            _context.Employees.Update(model);
+            return _context.SaveChanges();
         }
+
+        public int Delete(Employee model)
+        {
+            _context.Employees.Remove(model);
+            return _context.SaveChanges();
+        }
+   
+       
     }
 }
