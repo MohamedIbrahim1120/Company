@@ -1,0 +1,59 @@
+﻿@model CreateDtoEmployee
+
+
+<div class="row">
+    <div class="col-md-6 my-2">
+        <label asp-for="Name" class="fw-bold text-success"></label>
+        <input asp-for="Name" class="form-control border-success" />
+        <span asp-validation-for="Name" class="text-danger fw-bold"></span>
+    </div>
+    <div class="col-md-6 my-2">
+        <label asp-for="Age" class="fw-bold text-success"></label>
+        <input asp-for="Age" class="form-control border-success" />
+        <span asp-validation-for="Age" class="text-danger fw-bold"></span>
+    </div>
+    <div class="col-md-6 my-2">
+        <label asp-for="Email" class="fw-bold text-success"></label>
+        <input asp-for="Email" class="form-control border-success" />
+        <span asp-validation-for="Email" class="text-danger fw-bold"></span>
+    </div>
+    <div class="col-md-6 my-2">
+        <label asp-for="Phone" class="fw-bold text-success"></label>
+        <input asp-for="Phone" class="form-control border-success" />
+        <span asp-validation-for="Phone" class="text-danger fw-bold"></span>
+    </div>
+    <div class="col-md-6 my-2">
+        <label asp-for="Salary" class="fw-bold text-success"></label>
+        <input asp-for="Salary" class="form-control border-success" />
+        <span asp-validation-for="Salary" class="text-danger fw-bold"></span>
+    </div>
+    <div class="col-md-6 my-2">
+        <label asp-for="HiringDate" class="fw-bold text-success"></label>
+        <input asp-for="HiringDate" class="form-control border-success" />
+        <span asp-validation-for="HiringDate" class="text-danger fw-bold"></span>
+    </div>
+    <div class="col-md-6 my-2">
+        <label asp-for="CreateAt" class="fw-bold text-success"></label>
+        <input asp-for="CreateAt" class="form-control border-success" />
+        <span asp-validation-for="CreateAt" class="text-danger fw-bold"></span>
+    </div>
+    <div class="col-md-6 my-2">
+        <label asp-for="Address" class="fw-bold text-success"></label>
+        <input asp-for="Address" class="form-control border-success" />
+        <span asp-validation-for="Address" class="text-danger fw-bold"></span>
+    </div>
+    <div class="col-md-6 my-2">
+        <div class="form-check">
+            <input asp-for="IsActive" class="form-check-input border-success" />
+            <label asp-for="IsActive" class="fw-bold text-success"></label>
+            <span asp-validation-for="IsActive" class="text-danger fw-bold"></span>
+        </div>
+    </div>
+    <div class="col-md-6 my-2">
+        <div class="form-check">
+            <input asp-for="IsDeleted" class="form-check-input border-success" />
+            <label asp-for="IsDeleted" class="fw-bold text-success"></label>
+            <span asp-validation-for="IsDeleted" class="text-danger fw-bold"></span>
+        </div>
+    </div>
+</div>

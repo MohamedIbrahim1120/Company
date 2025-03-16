@@ -1,0 +1,23 @@
+﻿@model Employee
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center py-3">
+            <h2 class="fw-bold mb-0"><i class="bi bi-person-badge-fill"></i> Employee Details</h2>
+        </div>
+
+        <partial name="EmployeePartialView/_DeleteDetailsPartialView" />
+
+            <div class="mt-4 text-center">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary fw-bold px-4 shadow-sm">
+                    <i class="bi bi-pencil-squaxre"></i> Edit
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary px-4 shadow-sm">
+                    <i class="bi bi-arrow-left"></i> Back To List
+                </a>
+            </div>
+        </div>
+    </div>

@@ -72,25 +72,39 @@ namespace Company.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            //if (id is null) return BadRequest("Invaild Id");
+            if (id is null) return BadRequest("Invaild Id");
 
-            //var dept = _departmentReopsitory.Get(id.Value);
+            var dept = _departmentReopsitory.Get(id.Value);
 
-            //if (dept is null) return NotFound(new {StatusCode = 404, message = $"Deparment With id  :{id} is not Found"});
+            if (dept is null) return NotFound(new { StatusCode = 404, message = $"Deparment With id  :{id} is not Found" });
+            var depDto = new CreateDtoDepartment()
+            {            
+                Code = dept.Code,
+                Name = dept.Name,
+                CreateAt=dept.CreateAt,
+            };
 
-            return Details(id,"Edit");
+            return View(depDto);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public IActionResult Edit([FromRoute] int id, CreateDtoDepartment department)
         {
             if (ModelState.IsValid)
             {
-                if (id == department.Id)
+
+                var depDto = new Department()
                 {
-                    var dept = _departmentReopsitory.Update(department);
+                    Id = id,
+                    Code = department.Code,
+                    Name = department.Name,
+                    CreateAt = department.CreateAt,
+                };
+                if (id == depDto.Id)
+                {
+                    var dept = _departmentReopsitory.Update(depDto);
                     if (dept > 0)
                     {
                         return RedirectToAction(nameof(Index));
@@ -104,12 +118,13 @@ namespace Company.PL.Controllers
         [HttpGet]
         public IActionResult Delete(int? id)
         {
+            #region F
             //if (id is null) return BadRequest("Invaild Id");
 
             //var dept = _departmentReopsitory.Get(id.Value);
 
             //if (dept is null) return NotFound(new { StatusCode = 404, message = $"Deparment With id  :{id} is not Found" });
-
+            #endregion
 
             return Details(id,nameof(Delete));
         }

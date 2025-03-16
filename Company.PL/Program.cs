@@ -15,6 +15,7 @@ namespace Company.PL
             builder.Services.AddControllersWithViews(); // Register Bulit-in MVC Services
 
             builder.Services.AddScoped<IDepartmentReopsitory,DepartmentReopsitory>(); // Allow DI For DepartmentReopsitory
+            builder.Services.AddScoped<IEmployeeReopsitory, EmployeeReopsitory>(); // Allow DI For DepartmentReopsitory
 
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {

@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 
 namespace Compnay.BLL.Interfaces
 {
-    public interface IDepartmentReopsitory
+    public interface IDepartmentReopsitory : IGenericReopsitory<Department>
     {
-        IEnumerable<Department> GetAll();
+        //IEnumerable<Department> GetAll();
 
-        Department? Get(int id);
+        //Department? Get(int id);
 
-        int Add(Department model);
+        //int Add(Department model);
 
-        int Update(Department model);
+        //int Update(Department model);
 
-        int Delete(Department model);
+        //int Delete(Department model);
 
+        //Employee? GetByName(string name);
 
     }
 }

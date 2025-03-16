@@ -9,47 +9,51 @@ using System.Threading.Tasks;
 
 namespace Compnay.BLL.Repositories
 {
-    public class DepartmentReopsitory : IDepartmentReopsitory
+    public class DepartmentReopsitory : GenericRepository<Department>, IDepartmentReopsitory
     {
-        private readonly CompanyDbContext _context; // NULL
+        #region DepartmentReopsitory
+        //private readonly CompanyDbContext _context; // NULL
 
-        // ASk CLR Create Object From CompanyDbContext
+        //// ASk CLR Create Object From CompanyDbContext
 
-        public DepartmentReopsitory(CompanyDbContext context)
-        {
-            _context = context;
-        }
+        //public DepartmentReopsitory(CompanyDbContext context)
+        //{
+        //    _context = context;
+        //}
 
-        public IEnumerable<Department> GetAll()
-        {
-            return _context.Departments.ToList();
-        }
+        //public IEnumerable<Department> GetAll()
+        //{
+        //    return _context.Departments.ToList();
+        //}
 
 
-        public Department? Get(int id)
-        {
-            return _context.Departments.FirstOrDefault(x => x.Id == id);
-        }
+        //public Department? Get(int id)
+        //{
+        //    return _context.Departments.FirstOrDefault(x => x.Id == id);
+        //}
 
-        public int Add(Department model)
-        {
-            _context.Departments.Add(model);
-            return _context.SaveChanges();
-        }
+        //public int Add(Department model)
+        //{
+        //    _context.Departments.Add(model);
+        //    return _context.SaveChanges();
+        //}
 
-        public int Update(Department model)
-        {
-            _context.Departments.Update(model);
-            return _context.SaveChanges();
-        }
+        //public int Update(Department model)
+        //{
+        //    _context.Departments.Update(model);
+        //    return _context.SaveChanges();
+        //}
 
-        public int Delete(Department model)
-        {
-            _context.Departments.Remove(model);
-            return _context.SaveChanges();
-        }
+        //public int Delete(Department model)
+        //{
+        //    _context.Departments.Remove(model);
+        //    return _context.SaveChanges();
+        //}
 
-     
-      
+        #endregion
+
+
+        public DepartmentReopsitory(CompanyDbContext context) : base(context) { }
+
     }
 }
