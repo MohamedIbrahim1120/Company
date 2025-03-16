@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace Compnay.BLL.Interfaces
 {
-    public interface IEmployeeReopsitory
+    public interface IEmployeeReopsitory : IGenericReopsitory<Employee>
     {
-        IEnumerable<Employee> GetAll();
+        //IEnumerable<Employee> GetAll();
 
-        Employee? Get(int id);
+        //Employee? Get(int id);
 
-        int Add(Employee model);
+        //int Add(Employee model);
 
-        int Update(Employee model);
+        //int Update(Employee model);
 
-        int Delete(Employee model);
+        //int Delete(Employee model);
 
     }
 }
