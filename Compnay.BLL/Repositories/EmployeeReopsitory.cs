@@ -1,6 +1,7 @@
 ﻿using Company.DAL.Data.Contexts;
 using Company.DAL.Models;
 using Compnay.BLL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Compnay.BLL.Repositories
 {
     public class EmployeeReopsitory : GenericRepository<Employee> , IEmployeeReopsitory
     {
+        private readonly CompanyDbContext _context;
         #region EmployeeReopsitory
         //private readonly CompanyDbContext _context;
 
@@ -53,7 +55,13 @@ namespace Compnay.BLL.Repositories
 
         public EmployeeReopsitory(CompanyDbContext context) : base(context) // ASk CLR Create Object From CompanyDbContext
         {
-            
+            _context = context;
+        }
+
+        public List<Employee> GetByName(string name)
+        {
+           return  _context.Employees.Include(E=>E.Department).Where(E => E.Name.ToLower().Contains(name.ToLower())).ToList();
+
         }
     }
 }

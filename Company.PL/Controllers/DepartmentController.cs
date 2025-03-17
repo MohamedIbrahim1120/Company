@@ -26,6 +26,18 @@ namespace Company.PL.Controllers
 
             var deaprment = _departmentReopsitory.GetAll();
 
+            // Dictionary : 
+            // 1. ViewData : Transfer Extra Inforamtion From Controller (Action) To View 
+
+            //ViewData["Message"] = "Hello From ViewData";
+
+
+            // 2. ViewBag  : Transfer Extra Inforamtion From Controller (Action) To View 
+            ViewBag.Message = "Hello From ViewBag";
+
+
+            // 3. TempData : 
+
             return View(deaprment);
         }
 

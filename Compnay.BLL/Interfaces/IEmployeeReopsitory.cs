@@ -19,5 +19,7 @@ namespace Compnay.BLL.Interfaces
 
         //int Delete(Employee model);
 
+        List<Employee> GetByName(string name);
+
     }
 }
