@@ -2,12 +2,41 @@
 
 @{
     ViewData["Title"] = "Index";
+    // string? ViewDataMessage = ViewData["Message"] as string;
+    // string? ViewBagMessage = ViewBag.Message;
 }
 
 <h1 class="text-primary">All Employee</h1>
 
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div id="alertMessage" class="m-3 alert alert-info">
+        <p>@TempData["Message"]</p>
+    </div>
+}
+
 <br />
 <br />
+
+
+@* <div class="m-3 alert alert-danger"> *@
+@*     <p>@ViewData["Message"]</p> *@
+@* </div> *@
+
+@* <div class="m-3 alert alert-danger"> *@
+@*     <p>@ViewBag.Message</p> *@
+@* </div> *@
+<form class="d-flex align-items-center gap-2 p-3 bg-light rounded shadow-sm">
+
+    <input type="text" id="SearchEmployee" placeholder="Search By Name" name="SearchEmployee" class="form-control w-50" />
+
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-search"></i> Search
+    </button>
+
+</form>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <a asp-action="Create" asp-controller="Employee" class="btn btn-outline-success px-4 fw-bold">
     <i class="bi bi-plus-circle"></i> Create Employee
@@ -31,6 +60,7 @@
                 <th>IsDeleted</th>
                 <th>@Html.DisplayNameFor(D => D.HiringDate)</th>
                 <th>@Html.DisplayNameFor(D => D.CreateAt)</th>
+                <th>Department Name</th>
                 <th>Details</th>
                 <th>Update</th>
                 <th>Delete</th>
@@ -50,6 +80,11 @@
                     <td>@item.IsDeleted</td>
                     <td>@item.HiringDate</td>
                     <td>@item.CreateAt</td>
+                    @if(item.Department is null){
+                        <td>No Department</td>
+                    }else{
+                        <td>@item.Department.Name</td>
+                    }
                     <td>
                         <partial name="_ButtonPartiaView" model="@item.Id" />
                     </td>
@@ -64,3 +99,16 @@ else
         <h4>There are no Employees :(</h4>
     </div>
 }
+
+<script>
+    setTimeout(function () {
+        var alertBox = document.getElementById("alertMessage");
+        if (alertBox) {
+            alertBox.style.transition = "opacity 1s";
+            alertBox.style.opacity = "0";
+            setTimeout(function () {
+                alertBox.style.display = "none";
+            }, 1000);
+        }
+    }, 3000);
+</script>

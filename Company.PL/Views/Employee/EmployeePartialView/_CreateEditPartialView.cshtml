@@ -1,5 +1,8 @@
-﻿@model CreateDtoEmployee
+﻿@model Employee
 
+@{
+    var Departments = new SelectList(ViewData["dep"] as IEnumerable<Department>,"Id","Name");
+}
 
 <div class="row">
     <div class="col-md-6 my-2">
@@ -55,5 +58,11 @@
             <label asp-for="IsDeleted" class="fw-bold text-success"></label>
             <span asp-validation-for="IsDeleted" class="text-danger fw-bold"></span>
         </div>
+    </div>
+    <div class="col-md-6 my-2">
+        <label asp-for="DepartmentId" class="fw-bold text-success"></label>
+        <select asp-for="DepartmentId" asp-items="Departments" class="form-control">
+                <option value="@null"> >-- Select Department --> </option>
+        </select>
     </div>
 </div>

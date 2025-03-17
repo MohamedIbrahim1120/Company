@@ -12,20 +12,20 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Company.DAL.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20250313233735_AddEmployeeTable")]
-    partial class AddEmployeeTable
+    [Migration("20250316224038_AddEmployeeDepartmentRelationship")]
+    partial class AddEmployeeDepartmentRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.13")
+                .HasAnnotation("ProductVersion", "8.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Company.DAL.Models.Employee", b =>
+            modelBuilder.Entity("Company.DAL.Models.Department", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,6 +67,9 @@ namespace Company.DAL.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -93,7 +96,24 @@ namespace Company.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Company.DAL.Models.Employee", b =>
+                {
+                    b.HasOne("Company.DAL.Models.Department", "Department")
+                        .WithMany("employees")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Company.DAL.Models.Department", b =>
+                {
+                    b.Navigation("employees");
                 });
 #pragma warning restore 612, 618
         }
