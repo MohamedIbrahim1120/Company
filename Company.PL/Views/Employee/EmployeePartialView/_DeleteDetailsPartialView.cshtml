@@ -47,6 +47,7 @@
     </div>
     <div class="col-md-6 my-2">
         <label asp-for="Department" class="fw-bold text-danger"></label>
-        <input asp-for="Department.Name" class="form-control border-danger bg-light" readonly />
+        <input value="@(Model.Department?.Name ?? "No Department")"
+               class="form-control border-danger bg-light" readonly />
     </div>
 </div>
