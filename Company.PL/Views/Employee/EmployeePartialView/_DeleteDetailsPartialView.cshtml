@@ -1,6 +1,17 @@
-﻿@model Employee
+﻿@model CreateDtoEmployee
 
 <div class="row">
+
+    <div class="d-flex justify-content-center my-3">
+        <div>
+            <label class="fw-bold text-success d-block text-center"></label>
+            <img src="@Url.Content($"~/files/images/{Model.ImageName}")"
+                 class="img-fluid border border-success rounded"
+                 style="max-width: 300px;"
+                 alt="Don't Have Iamge" />
+        </div>
+    </div>
+
     <div class="col-md-6 my-2">
         <label asp-for="Name" class="fw-bold text-danger"></label>
         <input asp-for="Name" class="form-control border-danger bg-light" readonly />
@@ -46,8 +57,10 @@
         </div>
     </div>
     <div class="col-md-6 my-2">
-        <label asp-for="Department" class="fw-bold text-danger"></label>
-        <input value="@(Model.Department?.Name ?? "No Department")"
-               class="form-control border-danger bg-light" readonly />
+        <label asp-for="DepartmentName" class="fw-bold text-danger"></label>
+        <input asp-for="DepartmentName" class="form-control" value="@(Model.DepartmentName != null ? Model.DepartmentName : "No Dept")" readonly />
     </div>
+    
+
+
 </div>

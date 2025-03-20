@@ -50,6 +50,7 @@
     <table class="table table-hover table-striped">
         <thead class="bg-secondary text-white">
             <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Age</th>
                 <th>Email</th>
@@ -70,6 +71,12 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td class="text-center align-middle">
+                        <img src="~/files/images/@item.ImageName"
+                             class="img-fluid rounded-circle border border-3 border-secondary shadow-sm"
+                             style="width: 80px; height: 80px; object-fit: cover;"
+                             alt="User Image" />
+                    </td>
                     <td>@item.Name</td>
                     <td>@item.Age</td>
                     <td>@item.Email</td>

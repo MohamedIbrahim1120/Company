@@ -1,6 +1,7 @@
 using Company.DAL.Data.Contexts;
 using Company.PL.Mapping;
 using Company.PL.Services;
+using Compnay.BLL;
 using Compnay.BLL.Interfaces;
 using Compnay.BLL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,8 @@ namespace Company.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews(); // Register Bulit-in MVC Services
 
-            builder.Services.AddScoped<IDepartmentReopsitory,DepartmentReopsitory>(); // Allow DI For DepartmentReopsitory
-            builder.Services.AddScoped<IEmployeeReopsitory, EmployeeReopsitory>(); // Allow DI For DepartmentReopsitory
+            //builder.Services.AddScoped<IDepartmentReopsitory,DepartmentReopsitory>(); // Allow DI For DepartmentReopsitory
+            //builder.Services.AddScoped<IEmployeeReopsitory, EmployeeReopsitory>(); // Allow DI For DepartmentReopsitory
 
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
@@ -32,7 +33,7 @@ namespace Company.PL
             builder.Services.AddTransient<ITransentServices,TransentServices>(); // per operation
             builder.Services.AddSingleton<ISingletonServices, SingletonServices>(); // per app
             builder.Services.AddAutoMapper(typeof(EmployeeProfile));
-
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
             var app = builder.Build();
 
@@ -60,3 +61,26 @@ namespace Company.PL
     }
 }
 
+
+#region Asy vs syn
+class Test
+{
+    public void Fun01()
+    {
+        // Statment01
+        // Statment02
+        // Statment03 --> Take Time
+        // Statment04
+        // Statment05
+    }
+
+    public void Fun02()
+    {
+        // Statment01
+        // Statment02
+        // Statment03 --> Take Time
+        // Statment04
+        // Statment05
+    }
+}
+#endregion

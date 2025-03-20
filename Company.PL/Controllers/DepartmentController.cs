@@ -11,21 +11,22 @@ namespace Company.PL.Controllers
     // MVC Controller
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentReopsitory _departmentReopsitory;
+        private readonly IUnitOfWork _unitOfWork;
 
-        // ASK CLR Create Object From DepartmentReopsitory
+      
 
-        public DepartmentController(IDepartmentReopsitory departmentReopsitory)
+        public DepartmentController( IUnitOfWork unitOfWork)
         {
-            _departmentReopsitory = departmentReopsitory;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet] // GET : /Department/Index
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
-            var deaprment = _departmentReopsitory.GetAll();
+            var deaprment = await _unitOfWork.DepartmentReopsitory.GetAllAsync();
 
+            #region Dictionary
             // Dictionary : 
             // 1. ViewData : Transfer Extra Inforamtion From Controller (Action) To View 
 
@@ -33,6 +34,9 @@ namespace Company.PL.Controllers
 
 
             // 2. ViewBag  : Transfer Extra Inforamtion From Controller (Action) To View 
+
+            #endregion
+
             ViewBag.Message = "Hello From ViewBag";
 
 
@@ -49,7 +53,7 @@ namespace Company.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateDtoDepartment model)
+        public async Task<IActionResult> Create(CreateDtoDepartment model)
         {
             if (ModelState.IsValid) // Server Side Validation
             {
@@ -59,7 +63,9 @@ namespace Company.PL.Controllers
                     Name = model.Name,
                     CreateAt = model.CreateAt,
                 };
-              var count =  _departmentReopsitory.Add(department);
+             await _unitOfWork.DepartmentReopsitory.AddAsync(department);
+                var count = await _unitOfWork.CompleteAsync();
+
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -70,11 +76,11 @@ namespace Company.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id,string viewName = "Details")
+        public async Task<IActionResult> Details(int? id,string viewName = "Details")
         {
             if(id is null) return NotFound();
 
-            var dept = _departmentReopsitory.Get(id.Value);
+            var dept = await _unitOfWork.DepartmentReopsitory.GetAsync(id.Value);
 
             if (dept is null) return NotFound();
 
@@ -82,11 +88,11 @@ namespace Company.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id is null) return BadRequest("Invaild Id");
 
-            var dept = _departmentReopsitory.Get(id.Value);
+            var dept = await _unitOfWork.DepartmentReopsitory.GetAsync(id.Value);
 
             if (dept is null) return NotFound(new { StatusCode = 404, message = $"Deparment With id  :{id} is not Found" });
             var depDto = new CreateDtoDepartment()
@@ -102,7 +108,7 @@ namespace Company.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, CreateDtoDepartment department)
+        public async Task<IActionResult> Edit([FromRoute] int id, CreateDtoDepartment department)
         {
             if (ModelState.IsValid)
             {
@@ -116,7 +122,9 @@ namespace Company.PL.Controllers
                 };
                 if (id == depDto.Id)
                 {
-                    var dept = _departmentReopsitory.Update(depDto);
+                     _unitOfWork.DepartmentReopsitory.Update(depDto);
+                    var dept = await _unitOfWork.CompleteAsync();
+
                     if (dept > 0)
                     {
                         return RedirectToAction(nameof(Index));
@@ -128,33 +136,33 @@ namespace Company.PL.Controllers
 
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            #region F
-            //if (id is null) return BadRequest("Invaild Id");
 
-            //var dept = _departmentReopsitory.Get(id.Value);
+            if (id is null) return BadRequest("Invaild Id");
 
-            //if (dept is null) return NotFound(new { StatusCode = 404, message = $"Deparment With id  :{id} is not Found" });
-            #endregion
+            var dept = await _unitOfWork.DepartmentReopsitory.GetAsync(id.Value);
 
-            return Details(id,nameof(Delete));
+            if (dept is null) return NotFound(new { StatusCode = 404, message = $"Deparment With id  :{id} is not Found" });
+
+            return View(dept);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Department department)
+        public async Task<IActionResult> Delete([FromRoute] int id, Department department)
         {
-            if (ModelState.IsValid)
-            {
-                if (id == department.Id)
+            if (!ModelState.IsValid)
+            {   
+               
+                _unitOfWork.DepartmentReopsitory.Delete(department);
+                var dept = await _unitOfWork.CompleteAsync();
+
+                if (dept > 0)
                 {
-                    var dept = _departmentReopsitory.Delete(department);
-                    if (dept > 0)
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
+                    return RedirectToAction(nameof(Index));
                 }
+                
             }
             return View(department);
         }
