@@ -1,4 +1,4 @@
-﻿@model Employee
+﻿@model CreateDtoEmployee
 
 @{
     var Departments = new SelectList(ViewData["dep"] as IEnumerable<Department>,"Id","Name");
@@ -66,3 +66,10 @@
         </select>
     </div>
 </div>
+<div class="mb-3">
+    <label asp-for="Image" class="fw-bold text-success form-label">Choose Photo</label>
+    <div class="input-group">
+        <input asp-for="Image" type="file" class="form-control border-success" />
+    </div>
+</div>
+

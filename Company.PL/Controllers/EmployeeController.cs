@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Company.DAL.Models;
 using Company.PL.Dtos;
+using Company.PL.Helpers;
 using Company.PL.Mapping;
 using Compnay.BLL.Interfaces;
 using Compnay.BLL.Repositories;
@@ -13,35 +14,39 @@ namespace Company.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeReopsitory _employeeReopsitory;
-        private readonly IDepartmentReopsitory _departmentReopsitory;
+        private readonly IUnitOfWork _unitOfWork;
+
+   
         private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeReopsitory employeeReopsitory
-            ,IDepartmentReopsitory departmentReopsitory
+        public EmployeeController(
+            IUnitOfWork unitOfWork
+
             ,IMapper mapper)
         {
-            _employeeReopsitory = employeeReopsitory;
-            _departmentReopsitory = departmentReopsitory;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
+        
 
         [HttpGet]
-        public IActionResult Index(string? SearchEmployee)
+        public async Task<IActionResult> Index(string? SearchEmployee)
         {
             IEnumerable<Employee> employee;
 
             if (string.IsNullOrEmpty(SearchEmployee))
             {
-                 employee = _employeeReopsitory.GetAll();
+                 employee = await _unitOfWork.EmployeeReopsitory.GetAllAsync();
                     
             }
             else
             {
-                 employee = _employeeReopsitory.GetByName(SearchEmployee);
+                 employee = await _unitOfWork.EmployeeReopsitory.GetByNameAsync(SearchEmployee);
 
             }
+
+            #region Dictionary
             // Dictionary : 
             // 1. ViewData : Transfer Extra Inforamtion From Controller (Action) To View 
 
@@ -53,19 +58,22 @@ namespace Company.PL.Controllers
 
 
             // 3. TempData : 
+            #endregion
+
+
             return View(employee);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var dep =  _departmentReopsitory.GetAll();
+            var dep = await _unitOfWork.DepartmentReopsitory.GetAllAsync();
             ViewData["dep"] = dep;
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Employee dto)
+        public async Task<IActionResult> Create(CreateDtoEmployee dto)
         {
             if (ModelState.IsValid)
             {
@@ -87,9 +95,14 @@ namespace Company.PL.Controllers
                 //};
                 #endregion
 
+                if(dto.Image is not null)
+                {
+                  dto.ImageName = DocumentSettings.UploadFile(dto.Image, "images");
+                }
+                var Emp =   _mapper.Map<Employee>(dto);
+                 await _unitOfWork.EmployeeReopsitory.AddAsync(Emp);
 
-                var Emp =  _mapper.Map<Employee>(dto);
-                var count = _employeeReopsitory.Add(Emp);
+                var count = await _unitOfWork.CompleteAsync();
                 if (count > 0)
                 {
                     TempData["Message"] = "Employee Is Created";
@@ -101,65 +114,89 @@ namespace Company.PL.Controllers
 
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id)
         {
             if(id == null) return NotFound();
 
-            var emp = _employeeReopsitory.Get(id.Value);
+            var emp = await _unitOfWork.EmployeeReopsitory.GetAsync(id.Value);
             
             if (emp == null) return NotFound();
 
-            return View(viewName,emp);
-        }
+            var dto = _mapper.Map<CreateDtoEmployee>(emp);
 
-        [HttpGet]
-        public IActionResult Edit(int? id)
-        {
-            var dep = _departmentReopsitory.GetAll();
-            ViewData["dep"] = dep;
-            if (id == null) return NotFound();
-            var emp = _employeeReopsitory.Get(id.Value);
-            if (emp is null) return NotFound();
-            return View(emp);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee dto)
-        {
-            if (ModelState.IsValid)
-            {
-                if (id != dto.Id) return BadRequest();
-                var count = _employeeReopsitory.Update(dto);
-                if(count > 0)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-            }
             return View(dto);
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Edit(int? id, string viewName = "Edit")
         {
-            return Details(id,nameof(Delete));
+            if(id is null) return BadRequest();
+            var emp = await _unitOfWork.EmployeeReopsitory.GetAsync(id.Value);
+
+            var dep = await _unitOfWork.DepartmentReopsitory.GetAllAsync();
+
+            ViewData["dep"] = dep;
+
+            if (emp is null) return NotFound();
+
+            var dto = _mapper.Map<CreateDtoEmployee>(emp);
+            return View(viewName,dto);
         }
 
         [HttpPost]
-        public IActionResult Delete([FromRoute] int id,Employee employee)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([FromRoute] int id, CreateDtoEmployee dto, string viewName = "Edit")
         {
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                if(id == employee.Id)
+                if(dto.ImageName is not null)
                 {
-                   var emp = _employeeReopsitory.Delete(employee);
-                    if (emp > 0)
-                    {
-                        return RedirectToAction(nameof(Index));
-                    }
+                    DocumentSettings.DeleteFile(dto.ImageName, "images");
+                }
+                if(dto.Image is not null)
+                {
+                    dto.ImageName = DocumentSettings.UploadFile(dto.Image, "images");
+                }
+                var Emp = _mapper.Map<Employee>(dto);
+                Emp.Id = id;
+                _unitOfWork.EmployeeReopsitory.Update(Emp);
+
+                var count = await _unitOfWork.CompleteAsync();
+                if (count > 0)
+                {
+                    TempData["Message"] = "Employee Is Updated";
+                    return RedirectToAction(nameof(Index));
                 }
             }
-            return View(employee);
+         
+            return View(viewName,dto);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var emp = await _unitOfWork.EmployeeReopsitory.GetAsync(id.Value);
+
+            if (emp == null) return NotFound();
+
+            var dto = _mapper.Map<CreateDtoEmployee>(emp);
+
+            return View(dto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromRoute] int id,Employee dto)
+        {
+            _unitOfWork.EmployeeReopsitory.Delete(dto);
+            var count = await _unitOfWork.CompleteAsync();
+            if (count > 0)
+            {
+                TempData["Message"] = "Employee Is Created";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(dto);
         }
     }
 }

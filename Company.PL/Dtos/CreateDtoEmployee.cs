@@ -5,8 +5,10 @@ namespace Company.PL.Dtos
 {
     public class CreateDtoEmployee
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage =" Name Is Required !")]
-        public string EmpName { get; set; }
+        public string Name { get; set; }
 
         [Range(1,60, ErrorMessage = "Age Must Be Between 10 And 60")]
         public int? Age { get; set; }
@@ -38,6 +40,14 @@ namespace Company.PL.Dtos
         [Required(ErrorMessage = "CreateAt Is Required !")]
         public DateTime CreateAt { get; set; }
 
+        [DisplayName("Department")]
         public int? DepartmentId { get; set; }
+
+        public  string? DepartmentName { get; set; }
+
+        public IFormFile? Image { get; set; }
+
+        public string? ImageName { get; set; }
+
     }
 }
