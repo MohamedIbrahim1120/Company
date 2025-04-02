@@ -1,9 +1,11 @@
 using Company.DAL.Data.Contexts;
+using Company.DAL.Models;
 using Company.PL.Mapping;
 using Company.PL.Services;
 using Compnay.BLL;
 using Compnay.BLL.Interfaces;
 using Compnay.BLL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.PL
@@ -34,7 +36,13 @@ namespace Company.PL
             builder.Services.AddSingleton<ISingletonServices, SingletonServices>(); // per app
             builder.Services.AddAutoMapper(typeof(EmployeeProfile));
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContext>();
 
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -50,7 +58,11 @@ namespace Company.PL
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
+
 
             app.MapControllerRoute(
                 name: "default",

@@ -2,6 +2,7 @@
 using Company.PL.Dtos;
 using Compnay.BLL.Interfaces;
 using Compnay.BLL.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using NuGet.Protocol.Plugins;
@@ -9,6 +10,7 @@ using NuGet.Protocol.Plugins;
 namespace Company.PL.Controllers
 {
     // MVC Controller
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
