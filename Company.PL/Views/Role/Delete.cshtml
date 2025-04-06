@@ -1,0 +1,28 @@
+﻿@model RoleToReturnDto
+
+
+<div class="container mt-4">
+    <div class="alert alert-danger text-center fw-bold" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i> Warning: You are about to delete this employee! This action is irreversible.
+    </div>
+
+    <div class="card border-danger shadow-lg">
+        <div class="card-header bg-danger text-white text-center fw-bold">
+            <i class="bi bi-person-x-fill"></i> Employee Details for Deletion
+        </div>
+        <div class="card-body">
+            <form asp-action="Delete">
+                <partial name="EmployeePartialView/_DeleteDetailsPartialView" />
+
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-danger fw-bold px-4">
+                        <i class="bi bi-trash"></i> Confirm Delete
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                        <i class="bi bi-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
