@@ -2,6 +2,7 @@ using Company.DAL.Data.Contexts;
 using Company.DAL.Models;
 using Company.PL.Mapping;
 using Company.PL.Services;
+//using Company.PL.Settings;
 using Compnay.BLL;
 using Compnay.BLL.Interfaces;
 using Compnay.BLL.Repositories;
@@ -37,12 +38,19 @@ namespace Company.PL
             builder.Services.AddAutoMapper(typeof(EmployeeProfile));
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddIdentity<AppUser, IdentityRole>()
-                            .AddEntityFrameworkStores<CompanyDbContext>();
+                            .AddEntityFrameworkStores<CompanyDbContext>()
+                            .AddDefaultTokenProviders();
+
+            //builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 
             builder.Services.ConfigureApplicationCookie(config =>
             {
                 config.LoginPath = "/Account/SignIn";
             });
+
+
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

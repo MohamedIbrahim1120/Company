@@ -1,0 +1,33 @@
+﻿@model UserToReturnDto
+
+
+<div class="container mt-5">
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white text-center rounded-top-4 py-3">
+            <h2 class="fw-bold"><i class="bi bi-pencil-square"></i> Edit Employee</h2>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Edit" enctype="multipart/form-data">
+
+                <partial name="EmployeePartialView/_CreateEditPartialView" />
+
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary fw-bold px-4 rounded-pill shadow">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill shadow">
+                        <i class="bi bi-arrow-left"></i> Back To List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section ValidationSection
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
