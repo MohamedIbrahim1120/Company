@@ -66,6 +66,24 @@ namespace Company.PL.Controllers
             return View(employee);
         }
 
+        [HttpGet]   
+        public async Task<IActionResult> Search(string? SearchEmployee)
+        {
+            IEnumerable<Employee> employee;
+
+            if (string.IsNullOrEmpty(SearchEmployee))
+            {
+                employee = await _unitOfWork.EmployeeReopsitory.GetAllAsync();
+
+            }
+            else
+            {
+                employee = await _unitOfWork.EmployeeReopsitory.GetByNameAsync(SearchEmployee);
+
+            }
+            return PartialView("EmployeePartialView/EmployeesTablePartialView",employee);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {

@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "~/Views/Shared/_NoNavbarLayout.cshtml";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="p-5 rounded shadow-lg border border-primary bg-light text-center" style="width: 90%; max-width: 400px;">
+        <h3 class="mb-4 text-primary">Reset Your Password</h3>
+
+        <form asp-action="ForgetPassword" method="post" class="mb-3">
+            <button type="submit" class="btn btn-lg btn-primary w-100 rounded-pill shadow">
+                🔐 Reset By Email
+            </button>
+        </form>
+
+        <form asp-action="ForgetPasswordByPhone" method="post">
+            <button type="submit" class="btn btn-lg btn-warning w-100 rounded-pill shadow text-white">
+                📱 Reset By Phone
+            </button>
+        </form>
+    </div>
+</div>
