@@ -10,7 +10,7 @@ using NuGet.Protocol.Plugins;
 namespace Company.PL.Controllers
 {
     // MVC Controller
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class DepartmentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -1,27 +1,100 @@
 ﻿@model List<UsersInRoleViewDto>
 @{
-    ViewData["Title"] = "AddOrRemoveUsers";
+    ViewData["Title"] = "Add Or Remove Users";
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
     var RoleId = ViewData["RoleId"] as string;
 }
 
-<form asp-action="AddOrRemoveUsers" asp-route-roleId="@RoleId">
-    @for (int i = 0; i < Model.Count; i++)
-    {
-        <div class="form-group">
-            <input asp-for="@Model[i].IsSelected" />
-            <label asp-for="@Model[i].IsSelected">@Model[i].UserName</label>
-        </div>
-
-        <input type="hidden" asp-for="@Model[i].UserId" />
-        <input type="hidden" asp-for="@Model[i].UserName" />
-
+<style>
+    .green-theme {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to right, #e8f5e9, #a5d6a7);
+        font-family: 'Segoe UI', sans-serif;
     }
 
+    .form-card {
+        width: 100%;
+        max-width: 750px;
+        background-color: #ffffff;
+        border: 3px solid #4caf50;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
 
-    <input type="submit" value="Update"  class="btn btn-success"/> 
-    <a asp-action="Edit" asp-route-id="@RoleId" class="btn btn-light">Cancel</a>
+        .form-card h2 {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 30px;
+        }
 
+    .form-check {
+        padding: 12px 0;
+        font-size: 20px;
+    }
 
-</form>
+    .form-check-input {
+        transform: scale(1.5);
+        margin-right: 15px;
+    }
 
+    .form-check-label {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .btn-success {
+        background-color: #43a047;
+        border-color: #43a047;
+        font-size: 20px;
+        padding: 10px 25px;
+        border-radius: 10px;
+    }
+
+    .btn-outline-secondary {
+        font-size: 20px;
+        padding: 10px 25px;
+        border-radius: 10px;
+    }
+
+    .btn i {
+        margin-right: 8px;
+    }
+</style>
+
+<div class="container green-theme">
+    <div class="form-card">
+        <h2>Manage Users in Role</h2>
+
+        <form asp-action="AddOrRemoveUsers" asp-route-roleId="@RoleId" method="post">
+            <div class="mb-4">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <div class="form-check border-bottom">
+                        <input asp-for="@Model[i].IsSelected" class="form-check-input" />
+                        <label asp-for="@Model[i].IsSelected" class="form-check-label">
+                            @Model[i].UserName
+                        </label>
+
+                        <input type="hidden" asp-for="@Model[i].UserId" />
+                        <input type="hidden" asp-for="@Model[i].UserName" />
+                    </div>
+                }
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Update
+                </button>
+                <a asp-action="Edit" asp-route-id="@RoleId" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

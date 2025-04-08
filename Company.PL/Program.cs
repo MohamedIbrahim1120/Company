@@ -1,8 +1,9 @@
 using Company.DAL.Data.Contexts;
 using Company.DAL.Models;
+using Company.PL.Helpers;
 using Company.PL.Mapping;
 using Company.PL.Services;
-//using Company.PL.Settings;
+using Company.PL.Settings;
 using Compnay.BLL;
 using Compnay.BLL.Interfaces;
 using Compnay.BLL.Repositories;
@@ -41,11 +42,18 @@ namespace Company.PL
                             .AddEntityFrameworkStores<CompanyDbContext>()
                             .AddDefaultTokenProviders();
 
-            //builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+            builder.Services.AddScoped<IMailService, MailService>();
+
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection(nameof(TwilioSettings)));
+
+            builder.Services.AddScoped<ITwilioService, TwilioService>();
 
             builder.Services.ConfigureApplicationCookie(config =>
             {
                 config.LoginPath = "/Account/SignIn";
+                config.AccessDeniedPath = "/Account/AccessDeined";
             });
 
 

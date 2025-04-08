@@ -11,11 +11,16 @@ namespace Company.PL.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        private readonly IMailService _mailService;
+        private readonly ITwilioService _twilioService;
+ 
+        public AccountController(ITwilioService twilioService, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IMailService mailService)
         {
             _userManager = userManager;
-            _signInManager = signInManager; 
+            _signInManager = signInManager;
+            _mailService = mailService;
+            _twilioService = twilioService;
+
         }
 
         #region SignUp
@@ -118,8 +123,15 @@ namespace Company.PL.Controllers
 
         #region Forget Password
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult ForgetPasswordByPhone()
         {
             return View();
         }
@@ -148,15 +160,16 @@ namespace Company.PL.Controllers
                         Body = url
                     };
                     // Send Email
-                    var flag = EmailSetting.SendEmail(email);
-                    if (flag)
-                    {
+                    ////var flag = EmailSetting.SendEmail(email);
+                    //if (flag)
+                    //{
+                    //    // Check Your Inbox
+                    //    return RedirectToAction(nameof(CheckYourInbox));
+                    //}
 
-                        // Check Your Inbox
+                    _mailService.SendEamil(email);
+                   return RedirectToAction(nameof(CheckYourInbox));
 
-                        return RedirectToAction(nameof(CheckYourInbox));
-
-                    }
                 }
             }
             ModelState.AddModelError("", "Invaild Reset Password Url !!");
@@ -164,10 +177,56 @@ namespace Company.PL.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordSms(ForgetPasswordDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    //  Generate Token
+
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    // Create URL
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    // Create Sms
+                    var sms = new Sms()
+                    {
+                        To = user.PhoneNumber,
+                        Body = url
+                    };
+                  
+                    _twilioService.SendSms(sms);
+
+                    return Redirect(nameof(CheckYourPhone));
+                }
+            }
+            ModelState.AddModelError("", "Invaild Reset Password Url !!");
+            return View(nameof(ForgetPassword), model);
+        }
+
+
+
         [HttpGet]
         public IActionResult CheckYourInbox()
         {
 
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult CheckYourPhone()
+        {
+            return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult ResetByPhoneOrEmail()
+        {
             return View();
         }
 
@@ -209,6 +268,11 @@ namespace Company.PL.Controllers
 
         #endregion
 
+
+        public IActionResult AccessDeined()
+        {
+            return View();
+        }
 
     }
 }
